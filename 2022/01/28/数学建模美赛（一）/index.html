@@ -1,0 +1,474 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="XingYu Liu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="本博客为备考2022年数学建模美赛，进行相关知识梳理和总结，ppt内容和代码来自课程《数学建模和入门》 一、预测类数学模型——拟合与插值1.曲线拟合问题已知一组（二维）数据，即平面上 n 个点（xi, yi),i&#x3D;1,…n, 寻求一个函数（曲线）y &#x3D; f(x) , 使 f(x) 在某种准则下与所有数据点最为接近，即曲线拟合得最好。  其中会引入误差平方和等概念来表示曲线拟合的效果，该值越小，则拟">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数学建模美赛（一）：拟合与插值">
+<meta property="og:url" content="http://example.com/2022/01/28/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E7%BE%8E%E8%B5%9B%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="胡椒军士俱乐部">
+<meta property="og:description" content="本博客为备考2022年数学建模美赛，进行相关知识梳理和总结，ppt内容和代码来自课程《数学建模和入门》 一、预测类数学模型——拟合与插值1.曲线拟合问题已知一组（二维）数据，即平面上 n 个点（xi, yi),i&#x3D;1,…n, 寻求一个函数（曲线）y &#x3D; f(x) , 使 f(x) 在某种准则下与所有数据点最为接近，即曲线拟合得最好。  其中会引入误差平方和等概念来表示曲线拟合的效果，该值越小，则拟">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128130702.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128131305.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128131850.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128132424.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128132556.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128132806.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128132954.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128133109.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128133459.png">
+<meta property="article:published_time" content="2022-01-28T04:57:23.000Z">
+<meta property="article:modified_time" content="2022-01-28T05:37:59.320Z">
+<meta property="article:author" content="XingYu Liu">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128130702.png">
+  
+  
+  <title>数学建模美赛（一）：拟合与插值 - 胡椒军士俱乐部</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/agate.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Sgt.pepper&#39;s Club</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/bg/tokyo.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="数学建模美赛（一）：拟合与插值">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-01-28 12:57" pubdate>
+        2022年1月28日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.1k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      27 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">数学建模美赛（一）：拟合与插值</h1>
+            
+            <div class="markdown-body">
+              <p>本博客为备考2022年数学建模美赛，进行相关知识梳理和总结，ppt内容和代码来自课程《数学建模和入门》</p>
+<h2 id="一、预测类数学模型——拟合与插值"><a href="#一、预测类数学模型——拟合与插值" class="headerlink" title="一、预测类数学模型——拟合与插值"></a>一、预测类数学模型——拟合与插值</h2><h3 id="1-曲线拟合问题"><a href="#1-曲线拟合问题" class="headerlink" title="1.曲线拟合问题"></a>1.曲线拟合问题</h3><p>已知一组（二维）数据，即平面上 n 个点（xi, yi),i=1,…n, 寻求一个函数（曲线）y = f(x) , 使 f(x) 在某种准则下与所有数据点最为接近，即曲线拟合得最好。</p>
+<blockquote>
+<p>其中会引入误差平方和等概念来表示曲线拟合的效果，该值越小，则拟合效果越好。</p>
+</blockquote>
+<h3 id="2-拟合与插值的关系"><a href="#2-拟合与插值的关系" class="headerlink" title="2.拟合与插值的关系"></a>2.拟合与插值的关系</h3><p>问题：给定一批数据点，需确定满足特定要求的曲线或曲面</p>
+<p>解决方案：</p>
+<ul>
+<li><p>若要求所求曲线（面）通过所给所有数据点，就是插值问题；</p>
+</li>
+<li><p>若不要求曲线（面）通过所有数据点，而是要求它反映对象整体的变化趋势，这就是数据拟合，又称曲线拟合或曲面拟合。</p>
+</li>
+</ul>
+<p>函数插值与曲线拟合都是要根据一组数据构造一个函数作为近似，由于近似的要求不同，二者的数学方法上完全不同。</p>
+<h2 id="二、拟合基本实例"><a href="#二、拟合基本实例" class="headerlink" title="二、拟合基本实例"></a>二、拟合基本实例</h2><p><img src="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128130702.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight matlab"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs matlab">t=[<span class="hljs-number">20.5</span> <span class="hljs-number">32.5</span> <span class="hljs-number">51</span> <span class="hljs-number">73</span> <span class="hljs-number">95.7</span>];<br>r=[<span class="hljs-number">765</span> <span class="hljs-number">826</span> <span class="hljs-number">873</span> <span class="hljs-number">942</span> <span class="hljs-number">1032</span>];<br><span class="hljs-comment">%polyfit进行线性拟合，t为自变量，r为因变量，1代表变量维数</span><br>aa=polyfit(t,r,<span class="hljs-number">1</span>);<br>a=aa(<span class="hljs-number">1</span>)<br>b=aa(<span class="hljs-number">2</span>)<br><span class="hljs-comment">%利用polyval计算t对应的拟合函数值</span><br>y=polyval(aa,t);<br><span class="hljs-comment">%plot代表二维绘图，t为自变量，r为因变量，r，k+代表图像标记方式，字母为颜色（r代表red)，</span><br><span class="hljs-comment">%+代表表现符号</span><br><span class="hljs-built_in">plot</span>(t,r,<span class="hljs-string">&#x27;k+&#x27;</span>,t,y,<span class="hljs-string">&#x27;r&#x27;</span>)<br></code></pre></div></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128131305.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight matlab"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs matlab">t=[<span class="hljs-number">0.25</span> <span class="hljs-number">0.5</span> <span class="hljs-number">1</span> <span class="hljs-number">1.5</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">6</span> <span class="hljs-number">8</span>];<br>c=[<span class="hljs-number">19.21</span> <span class="hljs-number">18.15</span> <span class="hljs-number">15.36</span> <span class="hljs-number">14.10</span> <span class="hljs-number">12.89</span> <span class="hljs-number">9.32</span> <span class="hljs-number">7.45</span> <span class="hljs-number">5.24</span> <span class="hljs-number">3.01</span>];<br><span class="hljs-built_in">plot</span>(t,c,<span class="hljs-string">&#x27;r*&#x27;</span>)<br><span class="hljs-comment">%pause代表停顿，用任意键使程序继续运行</span><br>pause<br><span class="hljs-comment">%semilogy代表使y轴为对数坐标轴</span><br>semilogy(t,c,<span class="hljs-string">&#x27;+&#x27;</span>)<br>pause <br><span class="hljs-built_in">plot</span>(t,c,<span class="hljs-string">&#x27;r*&#x27;</span>)<br><span class="hljs-comment">%hold on指在绘制下一张图时保留前一张图</span><br><span class="hljs-built_in">hold</span> on<br>c0=<span class="hljs-number">23</span>;<br>k=<span class="hljs-number">0.3</span>;<br>c1=c0*<span class="hljs-built_in">exp</span>(-k*t);<br><span class="hljs-built_in">plot</span>(t,c1,<span class="hljs-string">&#x27;b*&#x27;</span>)<br></code></pre></div></td></tr></table></figure>
+
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><h2 id="三、三种插值"><a href="#三、三种插值" class="headerlink" title="三、三种插值"></a>三、三种插值</h2><p>三种插值分别为最近临插值、线性插值、样条插值。以下为三种插值的实现和曲线拟合对比图。</p>
+<figure class="highlight matlab"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs matlab">x=[<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">4</span> <span class="hljs-number">7</span> <span class="hljs-number">9</span> <span class="hljs-number">12</span> <span class="hljs-number">13</span> <span class="hljs-number">15</span> <span class="hljs-number">17</span>];<br>f=[<span class="hljs-number">1.5</span> <span class="hljs-number">3.9</span> <span class="hljs-number">6</span> <span class="hljs-number">11.7</span> <span class="hljs-number">12.6</span> <span class="hljs-number">18.8</span> <span class="hljs-number">20.3</span> <span class="hljs-number">20.6</span> <span class="hljs-number">21.1</span>];<br>axis([<span class="hljs-number">0</span> <span class="hljs-number">18</span> <span class="hljs-number">1</span>  <span class="hljs-number">22</span>])<br>xlabel(<span class="hljs-string">&#x27;x&#x27;</span>)<br>ylabel(<span class="hljs-string">&#x27;f&#x27;</span>)<br>y=<span class="hljs-number">1</span>:<span class="hljs-number">0.1</span>:<span class="hljs-number">17</span>;<br><span class="hljs-comment">%代表绘图1，后续还有绘图2和3分别是产生新的绘图</span><br><br><span class="hljs-built_in">figure</span>(<span class="hljs-number">1</span>)<br><span class="hljs-built_in">plot</span>(x,f,<span class="hljs-string">&#x27;o&#x27;</span>)<br><span class="hljs-comment">%在图中产生标记点位</span><br>gtext(<span class="hljs-string">&#x27;已知数据点&#x27;</span>)<br><span class="hljs-built_in">hold</span> on;pause<br><br><span class="hljs-comment">%插值函数，总共提供四个参数，前两个参数为提供的数据点横纵坐标，第三个参数为实际曲线的</span><br><span class="hljs-comment">%所有横指标值，第四个参数为插值类型，nearest指最近临插值。</span><br>bb1=interp1(x,f,y,<span class="hljs-string">&#x27;nearest&#x27;</span>)<br><span class="hljs-built_in">plot</span>(y,bb1)<br>gtext(<span class="hljs-string">&#x27;nearest&#x27;</span>)<br><span class="hljs-built_in">hold</span> on;pause<br>a=polyfit(x,f,<span class="hljs-number">3</span>)<br>aa=polyval(a,y)<br><span class="hljs-built_in">plot</span>(y,aa)<br>gtext(<span class="hljs-string">&#x27;曲线拟合&#x27;</span>)<br><span class="hljs-built_in">hold</span> off;pause<br><br><span class="hljs-built_in">figure</span>(<span class="hljs-number">2</span>)<br><br><span class="hljs-built_in">plot</span>(x,f,<span class="hljs-string">&#x27;o&#x27;</span>)<br>gtext(<span class="hljs-string">&#x27;已知数据点&#x27;</span>)<br><span class="hljs-built_in">hold</span> on;pause<br>bb1=interp1(x,f,y,<span class="hljs-string">&#x27;linear&#x27;</span>)<br><span class="hljs-built_in">plot</span>(y,bb1)<br>gtext(<span class="hljs-string">&#x27;linear&#x27;</span>)<br><span class="hljs-built_in">hold</span> on;pause<br>a=polyfit(x,f,<span class="hljs-number">3</span>)<br>aa=polyval(a,y)<br><span class="hljs-built_in">plot</span>(y,aa)<br>gtext(<span class="hljs-string">&#x27;曲线拟合&#x27;</span>)<br><span class="hljs-built_in">hold</span> off;pause<br><br><span class="hljs-built_in">figure</span>(<span class="hljs-number">3</span>)<br><br><span class="hljs-built_in">plot</span>(x,f,<span class="hljs-string">&#x27;o&#x27;</span>)<br>gtext(<span class="hljs-string">&#x27;已知数据点&#x27;</span>)<br><span class="hljs-built_in">hold</span> on;pause<br>bb1=interp1(x,f,y,<span class="hljs-string">&#x27;spline&#x27;</span>)<br><span class="hljs-built_in">plot</span>(y,bb1)<br>gtext(<span class="hljs-string">&#x27;spline&#x27;</span>)<br><span class="hljs-built_in">hold</span> on;pause<br>a=polyfit(x,f,<span class="hljs-number">3</span>)<br>aa=polyval(a,y)<br><span class="hljs-built_in">plot</span>(y,aa)<br>gtext(<span class="hljs-string">&#x27;曲线拟合&#x27;</span>)<br><span class="hljs-built_in">hold</span> off;pause<br></code></pre></div></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128131850.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="四、用matlab解拟合问题"><a href="#四、用matlab解拟合问题" class="headerlink" title="四、用matlab解拟合问题"></a>四、用matlab解拟合问题</h2><h3 id="1-线性最小二乘拟合"><a href="#1-线性最小二乘拟合" class="headerlink" title="1. 线性最小二乘拟合"></a>1. 线性最小二乘拟合</h3><p><img src="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128132424.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="例子一："><a href="#例子一：" class="headerlink" title="例子一："></a>例子一：</h4><p><img src="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128132556.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight matlab"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs matlab"><span class="hljs-comment">%多项式拟合方法</span><br>   x=<span class="hljs-number">0</span>:<span class="hljs-number">0.1</span>:<span class="hljs-number">1</span>;<br>   y=[<span class="hljs-number">-0.447</span> <span class="hljs-number">1.978</span> <span class="hljs-number">3.28</span> <span class="hljs-number">6.16</span> <span class="hljs-number">7.08</span> <span class="hljs-number">7.34</span> <span class="hljs-number">7.66</span> <span class="hljs-number">9.56</span> <span class="hljs-number">9.48</span> <span class="hljs-number">9.30</span> <span class="hljs-number">11.2</span>];<br>   A=polyfit(x,y,<span class="hljs-number">2</span>)<br>   z=polyval(A,x);<br>   <span class="hljs-built_in">plot</span>(x,y,<span class="hljs-string">&#x27;k+&#x27;</span>,x,z,<span class="hljs-string">&#x27;r&#x27;</span>)<br><span class="hljs-comment">%超定方程解法</span><br>  x=<span class="hljs-number">0</span>:<span class="hljs-number">0.1</span>:<span class="hljs-number">1</span>;<br>  y=[<span class="hljs-number">-0.447</span> <span class="hljs-number">1.978</span> <span class="hljs-number">3.28</span> <span class="hljs-number">6.16</span> <span class="hljs-number">7.08</span> <span class="hljs-number">7.34</span> <span class="hljs-number">7.66</span> <span class="hljs-number">9.56</span> <span class="hljs-number">9.48</span> <span class="hljs-number">9.30</span> <span class="hljs-number">11.2</span>];<br><span class="hljs-comment">%x&#x27;代表x的转置</span><br>  R=[(x.^<span class="hljs-number">2</span>)&#x27; x&#x27; <span class="hljs-built_in">ones</span>(<span class="hljs-number">11</span>,<span class="hljs-number">1</span>)];<br>  A=R\y&#x27;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="-1"><a href="#-1" class="headerlink" title=""></a></h3><h3 id="2-非线性最小二乘拟合"><a href="#2-非线性最小二乘拟合" class="headerlink" title="2. 非线性最小二乘拟合"></a>2. 非线性最小二乘拟合</h3><p><img src="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128132806.png" srcset="/img/loading.gif" lazyload></p>
+<blockquote>
+<p>非线性最小二乘拟合有两种基本函数，以下用两个例子来分别介绍函数的实现。</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128132954.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="1-lsqcurvefit"><a href="#1-lsqcurvefit" class="headerlink" title="(1).lsqcurvefit"></a>(1).lsqcurvefit</h4><p><img src="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128133109.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight matlab"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs matlab"><span class="hljs-comment">%编写M文件 curvefun1.m</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">f</span>=<span class="hljs-title">curvefun1</span><span class="hljs-params">(x,tdata)</span></span><br>    f=x(<span class="hljs-number">1</span>)+x(<span class="hljs-number">2</span>)*<span class="hljs-built_in">exp</span>(<span class="hljs-number">-0.02</span>*x(<span class="hljs-number">3</span>)*tdata)   <br>                   <span class="hljs-comment">% x(1)=a; x(2)=b,x(3)=k;</span><br><span class="hljs-comment">%输入命令</span><br>clear<br>  tdata=<span class="hljs-number">100</span>:<span class="hljs-number">100</span>:<span class="hljs-number">1000</span><br>  cdata=<span class="hljs-number">1e03</span>*[<span class="hljs-number">4.54</span>,<span class="hljs-number">4.99</span>,<span class="hljs-number">5.35</span>,<span class="hljs-number">5.65</span>,<span class="hljs-number">5.90</span>,<span class="hljs-number">6.10</span>,<span class="hljs-number">6.26</span>,<span class="hljs-number">6.39</span>,<span class="hljs-number">6.50</span>,<span class="hljs-number">6.59</span>];<br>  x0=[<span class="hljs-number">0.2</span>,<span class="hljs-number">0.05</span>,<span class="hljs-number">0.05</span>];<br>  x=lsqcurvefit(<span class="hljs-string">&#x27;curvefun1&#x27;</span>,x0,tdata,cdata)<br>  f=curvefun1(x,tdata)  <br><br> <span class="hljs-built_in">figure</span><br> <span class="hljs-built_in">plot</span>(tdata,cdata,<span class="hljs-string">&#x27;r*&#x27;</span>)<br> <span class="hljs-built_in">hold</span> on<br> <span class="hljs-built_in">plot</span>(tdata,f,<span class="hljs-string">&#x27;bO&#x27;</span>)<br> <span class="hljs-built_in">hold</span> on<br> t=<span class="hljs-number">100</span>:<span class="hljs-number">0.1</span>:<span class="hljs-number">1000</span>;<br> y=x(<span class="hljs-number">1</span>)+x(<span class="hljs-number">2</span>)*<span class="hljs-built_in">exp</span>(<span class="hljs-number">-0.02</span>*x(<span class="hljs-number">3</span>)*t);  <br> <span class="hljs-built_in">plot</span>(t,y,<span class="hljs-string">&#x27;b&#x27;</span>)<br></code></pre></div></td></tr></table></figure>
+
+<h4 id="2-lsqnonlin"><a href="#2-lsqnonlin" class="headerlink" title="(2).lsqnonlin"></a>(2).lsqnonlin</h4><p><img src="https://raw.githubusercontent.com/SgtPepperr/ImgStg/master/20220128133459.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight matlab"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs matlab"><span class="hljs-comment">%编写M文件 curvefun2.m,cdata,tdata值提前写入function中</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">f</span>=<span class="hljs-title">curvefun2</span><span class="hljs-params">(x)</span></span><br>tdata=<span class="hljs-number">100</span>:<span class="hljs-number">100</span>:<span class="hljs-number">1000</span>;<br>cdata=<span class="hljs-number">1e03</span>*[<span class="hljs-number">4.54</span>,<span class="hljs-number">4.99</span>,<span class="hljs-number">5.35</span>,<span class="hljs-number">5.65</span>,<span class="hljs-number">5.90</span>,<span class="hljs-number">6.10</span>,<span class="hljs-number">6.26</span>,<span class="hljs-number">6.39</span>,<span class="hljs-number">6.50</span>,<span class="hljs-number">6.59</span>];<br>f=x(<span class="hljs-number">1</span>)+x(<span class="hljs-number">2</span>)*<span class="hljs-built_in">exp</span>(<span class="hljs-number">-0.02</span>*x(<span class="hljs-number">3</span>)*tdata)-cdata<br><br><br><span class="hljs-comment">%键入命令</span><br>clear<br>x0=[<span class="hljs-number">0.2</span>,<span class="hljs-number">0.05</span>,<span class="hljs-number">0.05</span>];<br>  x=lsqnonlin(<span class="hljs-string">&#x27;curvefun2&#x27;</span>,x0)<br>  f= curvefun2(x)<br></code></pre></div></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/01/22/python%E5%AD%A6%E4%B9%A0%EF%BC%88%E5%9B%9B%EF%BC%89/">
+                        <span class="hidden-mobile">python学习（四）：函数使用进阶</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
